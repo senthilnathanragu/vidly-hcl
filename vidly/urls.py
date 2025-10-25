@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.urls import path, include
 from api.models import MovieResource
 from . import views
+from movies import views as movie_views
+from django.contrib.auth import views as auth_views
 
 movie_resource = MovieResource()
 
@@ -26,5 +28,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("movies/", include("movies.urls")),
     path("api/", include(movie_resource.urls)),
-    path("", views.home)
+    path('', movie_views.login_choice, name='login_choice'),  # Login page
+    path('user-login/', movie_views.user_login, name='user_login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('home/', movie_views.user_home, name='user_home'),  # After login
 ]

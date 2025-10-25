@@ -7,6 +7,11 @@ from google import genai
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.models import User
 
 # Hardcode your API key (for hackathon/demo only)
 client = genai.Client(api_key="AIzaSyDX2RElhuO3SgSHLlnMn2S2R2M4LBI8rtQ")
@@ -54,3 +59,51 @@ def detail(request, movie_id):
 #     return render(request, 'movies/details.html', {'movie':movie})
 # except Movie.DoesNotExist :
 #     raise Http404
+
+# from django.shortcuts import render, redirect
+# from django.contrib.auth import authenticate, login
+# from django.contrib.auth.decorators import login_required
+# from django.contrib import messages
+
+
+def login_choice(request):
+    # Page with buttons: User Login / Admin Login
+    return render(request, "movies/login_choice.html")
+
+
+def ensure_demo_users():
+    demo_users = [
+        {"username": "demo", "password": "DemoPass123"},
+        {"username": "alice", "password": "AlicePass"},
+        {"username": "bob", "password": "1234"},
+    ]
+
+    for user_data in demo_users:
+        user, created = User.objects.get_or_create(username=user_data["username"])
+        # Only set password if user was just created or password is unusable
+        if created or not user.has_usable_password():
+            user.set_password(user_data["password"])
+            user.save()
+
+
+def user_login(request):
+    ensure_demo_users()  # make sure demo users exist
+
+    if request.method == "POST":
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("user_home")
+        else:
+            messages.error(request, "Invalid username or password.")
+
+    return render(request, "movies/user_login.html")
+
+
+@login_required(login_url="user_login")
+def user_home(request):
+    # Your current home.html page with AI recommendations
+    return render(request, "movies/user_home.html")
