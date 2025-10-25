@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block Content %}
+<dl>
+    <dt>Title</dt>
+    <dd>{{ movie.title }}</dd>
+    <dt>Genre</dt>
+    <dd>{{ movie.genre }}</dd>
+    <dt>Release Date</dt>
+    <dd>{{ movie.release_date }}</dd>
+    <dt>Rating</dt>
+    <dd>{{ movie.rating }}</dd>
+</dl>
+{% endblock Content %}
