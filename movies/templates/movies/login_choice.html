@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block Content %}
+<div class="container text-center mt-5">
+  <h1 class="mb-4">Welcome to Vidly 🎬</h1>
+  <p class="lead mb-4">Choose your login type:</p>
+  <a href="{% url 'user_login' %}" class="btn btn-primary btn-lg m-2">User Login</a>
+  <a href="/admin/" class="btn btn-warning btn-lg m-2">Admin Login</a>
+</div>
+{% endblock %}

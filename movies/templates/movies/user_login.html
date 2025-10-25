@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block Content %}
+<div class="container mt-5" style="max-width: 400px;">
+  <h3>User Login</h3>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" name="username" id="username" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" name="password" id="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+  </form>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-danger mt-2">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}
